@@ -1,0 +1,17 @@
+{
+    "owner_email": "simon.lambert@gmail.com",
+    "publication_api_version": "0.1",
+    "name": "Stock Prices",
+    "description": "Get a daily stock price summary.",
+    "delivered_on": "every weekday",
+    "send_timezone_info": "false",
+    "send_delivery_count": "false",
+    "external_configuration": "false",
+    "config" : {
+         "fields": [{
+              "type": "text",
+              "name": "stocks",
+              "label": "Enter your tickers"
+          }]
+    }
+}
