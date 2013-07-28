@@ -9,11 +9,28 @@ import os
 
 app = Flask(__name__)
 
+def get_icon(change):
+    if change == "N/A":
+        return None
+    else:
+        change = float(change[:-1])
+        
+    if change >= 5:
+        icon = '2.png'
+    elif change > 0:
+        icon = '1.png'
+    elif change > -5:
+        icon = 'neg1.png'
+    else
+        icon = 'neg2.png'
+    return icon
+
+
 def get_quotes(symbols):
     data = []
     url = 'http://finance.yahoo.com/d/quotes.csv?s='
     for s in symbols:
-        url += s+"+"
+        url += s + "+"
     url = url[0:-1]
     url += "&f=sl1p2"
     f = u.urlopen(url,proxies = {})
@@ -23,14 +40,14 @@ def get_quotes(symbols):
         symbol = values[0][1:-1]
         price = string.atof(values[1])
         change = values[2].strip()[1:-1]
-        data.append([symbol,price,change])
+        data.append([symbol,price,change, get_icon(change)])
     return data
 
 @app.route("/edition/")
 def edition():
     stocks = None
     if request.args.get('test', False):
-        stocks = "GOOG"
+        stocks = "GOOG,LKJLJ"
     elif request.args.get('stocks', False):
         stocks = request.args['stocks']
     else:
