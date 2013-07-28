@@ -15,7 +15,10 @@
   </style>
 </head>
 <body>
-	<h3>Get your stock quotes here</h3>
-	<p>Finding prices for <strong>{{stocks}}</strong></p>
+	<h3>Get your hot stock quotes here</h3>
+<table>
+{% for item in quotes %}
+<tr><td>{{item[0]}}</td><td>{{item[1]}}</td><td>{{item[2]}}</td></tr>
+{% endfor %}
 </body>
 </html>
