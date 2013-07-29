@@ -57,7 +57,7 @@
 
 <table>
 {% for item in quotes %}
-<tr><td>{{item[0]}}</td><td>{{item[1]}}</td><td>{{item[2]}}</td><td>{% if item[3] is none %}&nbsp;{% else %}<img src="../static/{{item[3]}}"/ width="20">{% endif %}</td></tr>
+<tr><td>{{item[0]}}</td><td>{{item[1]}}</td><td>{{item[2]}}</td><td>{% if item[3] is none %}&nbsp;{% else %}<img src="../static/{{item[3]}}" width="20">{% endif %}</td></tr>
 {% endfor %}
 </table>
 <br>

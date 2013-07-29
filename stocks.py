@@ -61,7 +61,7 @@ def edition():
 
 @app.route("/sample/")
 def sample():
-    data = get_quotes("GOOG".split(","))
+    data = get_quotes("GOOG,EPO.L,TSLA,YHOO".split(","))
     response = make_response(render_template('stocks.html', quotes=data))
     response.headers['ETag'] = hashlib.sha224(date.today().strftime('%d%m%Y')).hexdigest()
     return response
