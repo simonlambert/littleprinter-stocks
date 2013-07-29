@@ -30,7 +30,7 @@ def get_quotes(symbols):
     data = []
     url = 'http://finance.yahoo.com/d/quotes.csv?s='
     for s in symbols:
-        url += s + "+"
+        url += s.strip() + "+"
     url = url[0:-1]
     url += "&f=sl1p2"
     f = u.urlopen(url,proxies = {})
