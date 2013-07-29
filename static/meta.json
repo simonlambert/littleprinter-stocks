@@ -11,7 +11,7 @@
          "fields": [{
               "type": "text",
               "name": "stocks",
-              "label": "Enter your tickers"
+              "label": "Enter your ticker symbols, separated with commas."
           }]
     }
 }
