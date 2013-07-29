@@ -21,7 +21,7 @@ def get_icon(change):
         icon = '1.png'
     elif change > -5:
         icon = 'neg1.png'
-    else
+    else:
         icon = 'neg2.png'
     return icon
 
