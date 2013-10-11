@@ -43,6 +43,13 @@ def get_quotes(symbols):
         data.append([symbol,price,change, get_icon(change)])
     return data
 
+
+def etag(stocks):
+    etag_date = date.today()
+    if etag_date.isoweekday() > 5:
+        etag_date = etag_date - timedelta(days=(etag_date.isoweekday()-5))
+    return hashlib.sha224(stocks + etag_date.strftime('%d%m%Y')).hexdigest()
+
 @app.route("/edition/")
 def edition():
     stocks = None
@@ -55,7 +62,7 @@ def edition():
 
     data = get_quotes(stocks.split(","))
     response = make_response(render_template('stocks.html', quotes=data))
-    response.headers['ETag'] = hashlib.sha224(stocks + date.today().strftime('%d%m%Y')).hexdigest()
+    response.headers['ETag'] = etag(stocks)
     return response
 
 
