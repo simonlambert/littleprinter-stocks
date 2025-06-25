@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, make_response, url_for, send_from_directory
-from datetime import date
-import urllib as u
-import string
+from datetime import date, timedelta
+from urllib.request import urlopen
+from urllib.parse import quote_plus
 import json
 import dateutil.parser
 import hashlib
@@ -28,19 +28,25 @@ def get_icon(change):
 
 def get_quotes(symbols):
     data = []
-    url = 'http://finance.yahoo.com/d/quotes.csv?s='
-    for s in symbols:
-        url += s.strip() + "+"
-    url = url[0:-1]
-    url += "&f=sl1p2"
-    f = u.urlopen(url,proxies = {})
-    rows = f.readlines()
+    base_url = 'https://download.finance.yahoo.com/d/quotes.csv?s='
+    query = '+'.join(quote_plus(s.strip()) for s in symbols)
+    url = f"{base_url}{query}&f=sl1p2"
+
+    try:
+        with urlopen(url) as f:
+            rows = f.readlines()
+    except Exception:
+        return data
+
     for r in rows:
-        values = [x for x in r.split(',')]
+        values = [x for x in r.decode('utf-8').split(',')]
         symbol = values[0][1:-1]
-        price = string.atof(values[1])
+        try:
+            price = float(values[1])
+        except ValueError:
+            price = 0.0
         change = values[2].strip()[1:-1]
-        data.append([symbol,price,change, get_icon(change)])
+        data.append([symbol, price, change, get_icon(change)])
     return data
 
 
@@ -77,8 +83,13 @@ def sample():
 @app.route("/validate_config/", methods=['GET', 'POST'])
 def validate_config():
     json_response = {'errors': [], 'valid': True}
-    user_settings = json.loads(request.values['config'])
-    
+    try:
+        user_settings = json.loads(request.values.get('config', '{}'))
+    except ValueError:
+        json_response['valid'] = False
+        json_response['errors'].append('Invalid JSON supplied')
+        user_settings = {}
+
     if not user_settings.get('stocks', None):
         json_response['valid'] = False
         json_response['errors'].append('Please provide some stock tickers')
@@ -99,5 +110,6 @@ def icon():
                                        
 
 if __name__ == "__main__":
-    app.debug = True    
+    debug = os.environ.get('DEBUG', 'False').lower() in ('1', 'true', 'yes')
+    app.debug = debug
     app.run(host='0.0.0.0')
